@@ -62,7 +62,7 @@ def main():
     # can refine their search.
     else:
         for match in matches:
-            print(match.fullpath)
+            print(match.full_path)
 
 
 def get_references(search_paths, valid_extensions):
