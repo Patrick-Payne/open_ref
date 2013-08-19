@@ -51,18 +51,23 @@ def main():
     # Do nothing if no references contain the search term.
     if len(matches) == 0:
         print("No matches found for search term: {}".format(search_term))
+        sys.exit()
 
     # If we have exactly one search hit, open it.
     elif len(matches) == 1:
         match = matches[0]
-        program = config.UNIX_READER_COMMANDS[match.extension]
-        subprocess.Popen([program, match.full_path], stderr=subprocess.DEVNULL)
 
     # If we have multiple search hits, show the list to the user so that they
     # can refine their search.
     else:
-        for match in matches:
-            print(match.full_path)
+        for index, match in enumerate(matches):
+            print("{0}: {1.full_path}".format(index, match))
+
+        match = matches[get_int("Which reference should be opened?: ", 0)]
+
+    # Launch the match as a background process, suppressing stderr.
+    program = config.UNIX_READER_COMMANDS[match.extension]
+    subprocess.Popen([program, match.full_path], stderr=subprocess.DEVNULL)
 
 
 def get_references(search_paths, valid_extensions):
@@ -138,6 +143,27 @@ def expand_path(raw_path):
     '/home/bob/reference'
     """
     return os.path.expandvars(os.path.expanduser(raw_path))
+
+
+def get_int(prompt, default_value=None):
+    """
+    Gets an integer input from the user, using a given prompt. If the user
+    doesn't input anything, just return default_value. If a user inputs an
+    invalid input, get_int tells the user that the input is invalid and prompts
+    them for new input.
+    """
+    while True:
+        try:
+            print(prompt)
+            input_string = sys.stdin.read(1)
+            if (not input_string) and (default_value is not None):
+                return default_value
+
+            input_int = int(input_string)
+            return input_int
+
+        except ValueError:
+            print("Invalid number entered.")
 
 
 if __name__ == '__main__':

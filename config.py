@@ -8,7 +8,11 @@ Description: Some configuration for open_ref.py, detailing where to look
 import os
 
 # For now, only Linux, with evince installed, is supported.
-UNIX_READER_COMMANDS = {".pdf": "evince", }
+UNIX_READER_COMMANDS = {".pdf": "evince",
+                        ".txt": "gvim",
+                        ".cpp": "gvim",
+                        ".py":  "gvim"}
+
 SUPPORTED_UNIX_FILE_EXTENSIONS = UNIX_READER_COMMANDS.keys()
 
 # The location of the test directory used for doc and unit tests
