@@ -122,16 +122,29 @@ def get_all_files(search_paths):
     all_files = []
     # Perform the search for files on each of the paths in search_paths.
     for path in expanded_search_paths:
-        # Check if the search path actually exists on the file system.
-        if not os.path.exists(path):
-            raise InvalidSearchPath("{} is an invalid path.".format(path))
-
-        # Get a list of file names in each directory below the search_paths.
-        for root, dirs, filenames in os.walk(path):
-            # Collect all files found.
-            all_files += [Reference(root, filename) for filename in filenames]
+        all_files += get_files_from_path(path)
 
     return all_files
+
+
+def get_files_from_path(path):
+    """
+    Returns a list of Reference objects representing all of the files found
+    recursively in a folder specified by path. path must be a string
+    representing an absolute path on the filesystem.
+    """
+    # Check if the search path actually exists on the file system.
+    if not os.path.exists(path):
+        raise InvalidSearchPath("{} is an invalid path.".format(path))
+
+    # Get a list of file names in each directory below the search_paths.
+    files_in_path = []
+    for root, dirs, filenames in os.walk(path):
+        for filename in filenames:
+            if not filename.startswith(config.EXCLUDE_PREFIX):
+                files_in_path.append(Reference(root, filename))
+
+    return files_in_path
 
 
 def expand_path(raw_path):

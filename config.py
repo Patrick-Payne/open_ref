@@ -19,4 +19,7 @@ SUPPORTED_UNIX_FILE_EXTENSIONS = UNIX_READER_COMMANDS.keys()
 TEST_DIR = os.path.join(os.getcwd(), "test")
 
 # This is the list of paths that will be searched, NON-RECURSIVELY.
-SEARCH_PATHS = ["~/reference", ]
+SEARCH_PATHS = ["~/reference", "~/snippets"]
+
+# This is the prefix used to exclude test code.
+EXCLUDE_PREFIX = "test_"
